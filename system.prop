@@ -1,0 +1,10 @@
+# RamblerPort v1.2 - minimal yogi identity
+# v1.2: removed ro.product.* device/model/name spoof (Pixel Camera's device
+# table doesn't know "yogi" -> UnsupportedOperationException crash).
+# Kept: PIXEL_2026_EXPERIENCE (sysconfig) + yogi fingerprint only.
+# Fingerprint reuses rango's real build train until yogi builds are public.
+
+ro.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.system.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.product.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.system_ext.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys

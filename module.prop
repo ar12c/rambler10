@@ -1,0 +1,6 @@
+id=ramblerport
+name=RamblerPort - Pixel 11 Rambler for Pixel 10
+version=v1.2
+versionCode=3
+author=opencode
+description=Spoofs Pixel 11 Pro Fold (yogi) identity and declares PIXEL_2026_EXPERIENCE to unlock Gboard Rambler on Pixel 10 Pro Fold (rango). Remove module and reboot to fully revert.
