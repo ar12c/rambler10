@@ -1,6 +1,6 @@
 id=ramblerport
 name=RamblerPort - Pixel 11 Rambler for Pixel 10
-version=v1.2
-versionCode=3
+version=v1.5
+versionCode=6
 author=opencode
-description=Spoofs Pixel 11 Pro Fold (yogi) identity and declares PIXEL_2026_EXPERIENCE to unlock Gboard Rambler on Pixel 10 Pro Fold (rango). Remove module and reboot to fully revert.
+description=Declares PIXEL_2026_EXPERIENCE (Pixel 11 feature flag) on Pixel 10 Pro Fold (rango). NO fingerprint spoof: stock rango identity keeps Pixel Camera working and stays consistent with TrickyStore keybox attestation for Play Integrity. Remove module + reboot to fully revert.

@@ -1,0 +1,7 @@
+# Device pulls / backups (contain account data, app binaries)
+phenowork/
+pixel11dump/
+*.bak
+
+# OS noise
+Thumbs.db

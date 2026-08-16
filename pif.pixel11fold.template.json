@@ -1,0 +1,8 @@
+{
+  "_comment": "Pixel 11 Pro Fold identity for PlayIntegrityFix (GMS-scoped spoof). Fill <ANGLE_BRACKET> fields from the real factory image filename/props on Aug 20: https://developers.google.com/android/images . Then: push over /data/adb/modules/playintegrityfix/pif.json, kill GMS, re-verify STRONG via integrity_check.sh. GoogleCamera never sees GMS-scoped props -> camera stays safe. Revert = restore stock rango pif.json from install.ps1.",
+  "FINGERPRINT": "google/<CODENAME>/<CODENAME>:17/<BUILD_ID>/<INCREMENTAL>:user/release-keys",
+  "MANUFACTURER": "Google",
+  "MODEL": "Pixel 11 Pro Fold",
+  "SECURITY_PATCH": "2026-08-05",
+  "DEVICE_INITIAL_SDK_INT": 37
+}
