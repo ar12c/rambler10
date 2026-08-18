@@ -1,5 +1,10 @@
 #!/system/bin/sh
 # Inspect GMS Flags Reborn storage layout. READ-ONLY.
+# v1.6 NOTE: the RUNTIME OVERRIDE STORE is NOT in Reborn's dir. The Xposed hook
+# inside each target app reads <target_data>/gmsflags_xposed/runtime_overrides.db
+# (table RuntimeFlagOverrides: packageName, name, flagType, value). Build it with
+# make_overrides_db.py and install it with apply_overrides.sh. The paths below
+# are just Reborn's own flag-cache dirs, kept for reference.
 R=/data/data/ua.polodarb.gmsflags.reborn
 
 echo "== files/phenotype tree =="

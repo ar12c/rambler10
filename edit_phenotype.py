@@ -2,13 +2,32 @@
 # Same mechanism the root version of GMS Flags uses. Reads phenowork\phenotype.db
 # (pulled from device, WAL alongside), writes overrides, checkpoints WAL so the
 # db is self-contained for the push back.
+#
+# v1.6: Gboard 18.x renamed the flags - the REAL registered names are
+#   enable_agentic_dictation            <- MASTER SWITCH (without it everything
+#   enable_jetson                          below is inert: "Agentic Dictation is
+#   enable_jetson_in_toolbar               disabled, not activating")
+#   enable_rambler_al_toolbar
+#   enable_rambler_toolbar_at_cursor_position
+#   show_rambler_dict_settings
+# The old bare names (rambler_al_toolbar etc.) exist as orphan rows in
+# flag_overrides from previous sessions - they are deleted here because GMS
+# applies overrides by exact name and those no longer match anything.
 import os, sqlite3, sys
 
 WORK = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'phenowork')
 os.chdir(WORK)
 
 PKG_SUFFIX = 'inputmethod.latin'
-FLAGS = ['rambler_al_toolbar', 'rambler_dict_settings', 'rambler_toolbar_at_cursor_position']
+ENABLE = [
+    'enable_agentic_dictation',
+    'enable_jetson',
+    'enable_jetson_in_toolbar',
+    'enable_rambler_al_toolbar',
+    'enable_rambler_toolbar_at_cursor_position',
+    'show_rambler_dict_settings',
+]
+STALE = ['rambler_al_toolbar', 'rambler_dict_settings', 'rambler_toolbar_at_cursor_position']
 
 con = sqlite3.connect('phenotype.db')
 cur = con.cursor()
@@ -52,7 +71,13 @@ for r in existing:
 if not existing:
     print('  (empty - using convention: value=1 as INTEGER, type=0=boolean)')
 
-for f in FLAGS:
+# Remove stale overrides whose names no longer exist in Gboard 18.x.
+for f in STALE:
+    cur.execute('DELETE FROM flag_overrides WHERE config_package_id=? AND name=?', (cpid, f))
+    if cur.rowcount:
+        print('deleted stale override:', f)
+
+for f in ENABLE:
     cur.execute('DELETE FROM flag_overrides WHERE config_package_id=? AND account_id=0 AND name=?', (cpid, f))
     cur.execute(
         'INSERT INTO flag_overrides (config_package_id, config_package_name, account_id, active, name, value, type, source)'

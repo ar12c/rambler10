@@ -1,5 +1,5 @@
 {
-  "_comment": "Pixel 11 Pro Fold identity for PlayIntegrityFix (GMS-scoped spoof). Fill <ANGLE_BRACKET> fields from the real factory image filename/props on Aug 20: https://developers.google.com/android/images . Then: push over /data/adb/modules/playintegrityfix/pif.json, kill GMS, re-verify STRONG via integrity_check.sh. GoogleCamera never sees GMS-scoped props -> camera stays safe. Revert = restore stock rango pif.json from install.ps1.",
+  "_comment": "SUPERSEDED in v1.6. The v1.5-era plan was a GMS-scoped Pixel 11 spoof via this pif.json (keeps GoogleCamera safe because it never sees GMS props). The shipped v1.6 design instead: (1) global yogi fingerprint via system.prop (fingerprint only, ro.product.* stays stock - camera verified safe), (2) Rambler unlock via Reborn runtime overrides (make_overrides_db.py + apply_overrides.sh), (3) pif.json stays STOCK RANGO for Play Integrity consistency with TrickyStore. Do NOT push this file unless that design is revisited; if you do, fill <ANGLE_BRACKET> fields from the real factory image props: https://developers.google.com/android/images",
   "FINGERPRINT": "google/<CODENAME>/<CODENAME>:17/<BUILD_ID>/<INCREMENTAL>:user/release-keys",
   "MANUFACTURER": "Google",
   "MODEL": "Pixel 11 Pro Fold",

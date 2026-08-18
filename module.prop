@@ -1,6 +1,6 @@
 id=ramblerport
 name=RamblerPort - Pixel 11 Rambler for Pixel 10
-version=v1.5
-versionCode=6
+version=v2.2
+versionCode=13
 author=opencode
-description=Declares PIXEL_2026_EXPERIENCE (Pixel 11 feature flag) on Pixel 10 Pro Fold (rango). NO fingerprint spoof: stock rango identity keeps Pixel Camera working and stays consistent with TrickyStore keybox attestation for Play Integrity. Remove module + reboot to fully revert.
+description=Spoofs the complete yogi (Pixel 11 Pro Fold) identity - Rambler's server gate keys off Build.DEVICE (verified: device=yogi -> flags served original=true). v2.1: CamFork RETIRED (its Vector hook tripped GCAM's pairip anti-tamper - SIGSEGV in libpairipcore.so). GCAM 11.0.073+ knows yogi natively; persist.camera.* props in system.prop keep G6-only (p26) EdgeTPU models from wedging the G5 TPU firmware. Magic Capture (comice) mode appears in GCAM but its capture pipeline needs G6-only prefilter models - hardware-blocked on G5, cannot run. pif.json stays stock rango (GMS-scoped) so Play Integrity with TrickyStore is unaffected. Remove module + reboot to fully revert; delete persist.camera.* props via resetprop -d to clear the camera kit. v2.2: agentic-dictation debug UI override forced off (post-dictation result toast removed).

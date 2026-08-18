@@ -26,7 +26,7 @@ sleep 30
 
 echo "== verify: rambler gate values in Gboard DataStore after re-sync =="
 PB=/data/data/com.google.android.inputmethod.latin/files/datastore/flags_jetpack_data_store.pb
-for key in rambler_al_toolbar rambler_dict_settings rambler_toolbar_at_cursor_position; do
+for key in enable_agentic_dictation enable_jetson enable_jetson_in_toolbar enable_rambler_al_toolbar enable_rambler_toolbar_at_cursor_position show_rambler_dict_settings; do
   off=$(grep -aob "$key" $PB | head -1 | cut -d: -f1)
   [ -z "$off" ] && { echo "$key: NOT IN PB"; continue; }
   klen=$(printf %s "$key" | wc -c)

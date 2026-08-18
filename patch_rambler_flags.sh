@@ -2,6 +2,11 @@
 # RamblerPort: flip rambler gates 00->01 in Gboard's Jetpack DataStore flag cache.
 # Safe to re-run: verifies proto framing (12 04 0a 02 08) before every write,
 # in-place edit (same inode, owner, SELinux label), full backup first.
+#
+# v1.6: Gboard 18.x flag names. The MASTER SWITCH is enable_agentic_dictation -
+# without it Gboard logs "Agentic Dictation is disabled, not activating" and
+# none of the UI flags matter. NOTE: this pb is rewritten from phenotype on
+# every sync - for permanence use edit_phenotype.py + pheno_push.sh instead.
 GB=com.google.android.inputmethod.latin
 PB=/data/data/$GB/files/datastore/flags_jetpack_data_store.pb
 BK=/data/local/tmp/flags_jetpack_data_store.pb.bak
@@ -15,7 +20,16 @@ cp -p $PB $BK && chmod 644 $BK && ls -l $BK
 
 set_flag() {
   key=$1
-  off=$(grep -aob "$key" $PB | head -1 | cut -d: -f1)
+  # exact key match: the byte before the key must not be [a-z_] so we don't
+  # land on a substring of a longer name (e.g. filter_rambler_...).
+  off=$(grep -aob "$key" $PB | while read -r line; do
+    o=${line%%:*}
+    prev=$(dd if=$PB bs=1 skip=$((o - 1)) count=1 2>/dev/null | xxd -p | tr -d ' \n')
+    case "$prev" in
+      6?|5f) continue ;;  # a-z or underscore -> substring of a longer key
+    esac
+    echo "$o"; break
+  done)
   if [ -z "$off" ]; then echo "$key: NOT FOUND in pb"; return; fi
   klen=$(printf %s "$key" | wc -c)
   vend=$((off + klen))
@@ -32,13 +46,16 @@ set_flag() {
 }
 
 echo "== patch =="
-set_flag rambler_al_toolbar
-set_flag rambler_dict_settings
-set_flag rambler_toolbar_at_cursor_position
+set_flag enable_agentic_dictation
+set_flag enable_jetson
+set_flag enable_jetson_in_toolbar
+set_flag enable_rambler_al_toolbar
+set_flag enable_rambler_toolbar_at_cursor_position
+set_flag show_rambler_dict_settings
 
 echo
-echo "== verify (expect 08 01 on the three gates) =="
-for key in rambler_al_toolbar rambler_dict_settings rambler_toolbar_at_cursor_position rambler_contributed_input_view_session; do
+echo "== verify (expect 08 01 on all gates) =="
+for key in enable_agentic_dictation enable_jetson enable_jetson_in_toolbar enable_rambler_al_toolbar enable_rambler_toolbar_at_cursor_position show_rambler_dict_settings; do
   off=$(grep -aob "$key" $PB | head -1 | cut -d: -f1)
   [ -z "$off" ] && continue
   klen=$(printf %s "$key" | wc -c)

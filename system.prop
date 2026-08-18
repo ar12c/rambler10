@@ -1,0 +1,79 @@
+# RamblerPort v2.1 - COMPLETE yogi (Pixel 11 Pro Fold) identity + GCAM 11 survival kit.
+#
+# PROVEN on-device (2026-08-17): Rambler's server-side phenotype gate keys off
+# Build.DEVICE - with device=rango the server serves no rambler flags
+# (Reborn hook logs show original=false) and the Jetson pipeline never starts;
+# with device=yogi the flags come down as original=true and
+# JetsonLite/S3 routing key "gboard-rambler" activate. So device MUST be yogi.
+#
+# GCAM (v2.1, SUPERSEDES the v2.0 CamFork design):
+#  - CamFork (Xposed Build-rewrite inside GoogleCamera) is RETIRED: GCAM's
+#    pairip anti-tamper detects the Vector hook and SIGSEGVs at launch
+#    (tombstones: SEGV_ACCERR in libpairipcore.so). Any in-process hook =
+#    dead camera. Never scope GCAM in any Vector module.
+#  - Not needed anyway: GCAM 11.0.073+ (Play-delivered under this spoof,
+#    includes yogi splits) natively knows the yogi device table entry.
+#  - BUT as-yogi GCAM loads p26 (Tensor G6) EdgeTPU model variants, which
+#    hard-crash the G5's DarwiNN firmware ("FirmwareCrash" -> VII abort kills
+#    BOTH GoogleCamera and the camera provider HAL). The persist.camera.*
+#    props below disable the G6-only model families. GCAM reads
+#    SystemProperties "persist.camera.<flag>" with top priority for
+#    q()/h()-resolved flags (decompile-verified; x()-read flags ignore props).
+#
+# Play Integrity unaffected: pif.json stays stock rango (GMS-scoped via PIF),
+# TrickyStore keybox attests.
+
+ro.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.system.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.product.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.system_ext.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.vendor.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.odm.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.bootimage.build.fingerprint=google/yogi/yogi:17/CP2A.260805.005/15828068:user/release-keys
+ro.build.flavor=yogi-user
+ro.build.product=yogi
+ro.product.device=yogi
+ro.product.model=Pixel 11 Pro Fold
+ro.product.name=yogi
+ro.product.system.device=yogi
+ro.product.system.model=Pixel 11 Pro Fold
+ro.product.system.name=yogi
+ro.product.product.device=yogi
+ro.product.product.model=Pixel 11 Pro Fold
+ro.product.product.name=yogi
+ro.product.system_ext.device=yogi
+ro.product.system_ext.model=Pixel 11 Pro Fold
+ro.product.system_ext.name=yogi
+
+# --- GCAM 11 on Tensor G5: keep G6 (p26) EdgeTPU models from loading ---------
+# Without these, GCAM-as-yogi wedges the TPU firmware ~10-20s into any camera
+# session and VII aborts kill GoogleCamera + the camera HAL (verified 2026-08-17).
+# Compat-layer coverage (gcamfork v0.3): pecan is now table-routed to pecan-p25*
+# assets -> candidate for staged on-device re-enable (remove this prop, test one
+# full camera session, keep only if clean). NIMA-v2 and smartcapturenet models
+# are not in the smali model tables (native-side selection) -> their props stay
+# mandatory. comice_* real-time effects are p26-only with no sibling -> permanent.
+persist.camera.pecan_enabled=false
+persist.camera.mts_enable_nima_v2=false
+persist.camera.mts_nima_aesthetic_tpu=false
+persist.camera.mts_smartcapturenet_enable=false
+persist.camera.mts_smartcapturenet_2=false
+persist.camera.comice_pvd_enabled=false
+persist.camera.comice_rvd_enabled=false
+persist.camera.comice_blur_bg=false
+persist.camera.comice_energy_effect_enabled=false
+# NOTE: persist.camera.comice_pre_filtering_pipeline_enabled is deliberately
+# ABSENT - that flag is read via GCAM's x() accessor (compiled-default only,
+# props ignored), so setting it does nothing. Magic Capture's capture pipeline
+# (mnv4/tcn prefilter models, p26/G6-only) cannot run on G5 hardware; the mode
+# stays visible but its capture session cannot start. See the port doc.
+
+# --- GCamFork NPU access (v2.2) ------------------------------------------------
+# The re-signed GCamFork GCAM build fails the EdgeTPU app service's signature
+# allowlist ("not in the EdgeTPU allowed list or signature mismatched"), so no
+# compat-layer-routed p25 model could load on the G5 NPU. This prop makes the
+# app service admit unlisted apps; the check is evaluated per request, so no
+# service restart is needed. Verified on-device 2026-08-18: with it set, the
+# DarwiNN compiler compiles GCAM's models and the lga_tpu firmware executes
+# them (hand_gesture_detection compile + Firmware Build Label observed).
+vendor.edgetpu.service.allow_unlisted_app=true
